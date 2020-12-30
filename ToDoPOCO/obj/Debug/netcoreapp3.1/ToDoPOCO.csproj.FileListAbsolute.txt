@@ -1,0 +1,9 @@
+C:\Users\P10503383\source\repos\ToDo\ToDoPOCO\bin\Debug\netcoreapp3.1\ToDoPOCO.deps.json
+C:\Users\P10503383\source\repos\ToDo\ToDoPOCO\bin\Debug\netcoreapp3.1\ToDoPOCO.dll
+C:\Users\P10503383\source\repos\ToDo\ToDoPOCO\bin\Debug\netcoreapp3.1\ToDoPOCO.pdb
+C:\Users\P10503383\source\repos\ToDo\ToDoPOCO\obj\Debug\netcoreapp3.1\ToDoPOCO.AssemblyInfoInputs.cache
+C:\Users\P10503383\source\repos\ToDo\ToDoPOCO\obj\Debug\netcoreapp3.1\ToDoPOCO.AssemblyInfo.cs
+C:\Users\P10503383\source\repos\ToDo\ToDoPOCO\obj\Debug\netcoreapp3.1\ToDoPOCO.csproj.CoreCompileInputs.cache
+C:\Users\P10503383\source\repos\ToDo\ToDoPOCO\obj\Debug\netcoreapp3.1\ToDoPOCO.dll
+C:\Users\P10503383\source\repos\ToDo\ToDoPOCO\obj\Debug\netcoreapp3.1\ToDoPOCO.pdb
+C:\Users\P10503383\source\repos\ToDo\ToDoPOCO\obj\Debug\netcoreapp3.1\ToDoPOCO.csprojAssemblyReference.cache

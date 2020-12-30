@@ -1,0 +1,26 @@
+﻿<div class="story-container">
+    <CascadingValue Value="this">
+        @ChildContent
+    </CascadingValue>
+</div>
+
+@code {
+
+    [Parameter] public List<ToDo.Models.Story> Stories { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public EventCallback<ToDo.Models.Story> OnStatusUpdated { get; set; }
+
+    public ToDo.Models.Story Payload { get; set; }
+
+    public async Task UpdateStoryAsync(ToDo.Models.StoryStatuses newStatus)
+    {
+        var story = Stories.SingleOrDefault(x => x.Id == Payload.Id);
+
+        if (story != null)
+        {
+            story.Status = newStatus;
+            story.LastUpdated = DateTime.Now;
+            await OnStatusUpdated.InvokeAsync(Payload);
+        }
+    }
+}

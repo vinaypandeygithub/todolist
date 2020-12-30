@@ -1,0 +1,64 @@
+﻿@using ToDo.Models;
+<li class="draggable" draggable="true" title="@TasksModel.Description" @ondragstart="@(() => HandleDragStart(TasksModel))" @ondragenter="HandleDragEnter"  @ondrop="HandleDrop">
+    <p class="description">@TasksModel.Description</p>
+    <p class="last-updated"><small>Last Updated</small> @TasksModel.LastUpdated.ToString("HH:mm.ss tt")</p>
+</li>
+
+@code {
+    [CascadingParameter] TaskModelContainer Container { get; set; }
+    [Parameter] public Tasks TasksModel { get; set; }
+    int sourceTaskStoryID;
+    TaskStatuses originalTaskStatus;
+    int currentTaskIndex;
+    private void HandleDragStart(Tasks selectedTask)
+    {
+        sourceTaskStoryID = selectedTask.StoryId;
+        originalTaskStatus = selectedTask.Status;
+        currentTaskIndex = GetIndex(selectedTask);
+        Container.Payload = selectedTask;
+    }
+    private void HandleDragEnter()
+    {
+        if (Container.Payload == null) return;
+        if (TasksModel.StoryId != Container.Payload.StoryId)
+        {
+            return;
+        }
+
+    }
+    int GetIndex(Tasks item)
+    {
+        return Container.Tasks.FindIndex(a => a.Id == item.Id);
+    }
+    void ClickItem(Tasks tasks)
+    {
+        sourceTaskStoryID = tasks.StoryId;
+        originalTaskStatus = tasks.Status;
+        currentTaskIndex = GetIndex(tasks);
+    }
+    private async Task HandleDrop()
+    {
+        if (Container.Payload == null )
+        {
+            return;
+        }
+        Tasks tasks = Container.Payload;
+        if (originalTaskStatus == tasks.Status)
+        {
+
+            if (tasks != null)
+            {
+                var index = GetIndex(tasks);
+                Console.WriteLine($"Drop index is {index}, move from {currentTaskIndex}");
+                // get current item
+                var current = Container.Tasks[currentTaskIndex];
+                // remove game from current index
+                Container.Tasks.RemoveAt(currentTaskIndex);
+                Container.Tasks.Insert(index, current);
+                await Container.StatusChanged();
+
+            }
+        }
+        Container.Payload = null;
+    }
+}

@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "signalr1": {
+      "restored": true,
+      "restoreTime": "2020-09-19T18:17:57.781887Z"
+    }
+  },
+  "parameters": {
+    "resourceGroup": {
+      "Type": "resourceGroup",
+      "Value": "azure-test"
+    },
+    "subscriptionId": {
+      "Type": "subscription",
+      "Value": "ec204f36-a41f-4c39-ade1-15ef7d7801ae"
+    }
+  }
+}

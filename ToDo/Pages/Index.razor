@@ -1,0 +1,91 @@
+﻿@page "/"
+@using ToDo.Models;
+@using System.Net.Http
+<div class="searchDivBar">
+   Search<input type="text" class="text-xl-left" @bind="TextForFilteration"/> <button class="btn-primary" @onchange="filterText" @onclick="filterText">Go</button>
+</div>
+@foreach (var story in Stories)
+{
+    <div class="collapsiblecontainer">
+        <div type="button" class="customcollapsible" draggable="true"   ondragover="event.preventDefault();"
+             @ondrop="@(()=>HandleDrop(story))"
+             @ondragenter="@(()=>HandleDragEnter(story))"
+             @ondragstart="@(()=>ClickItem(story))">@story.Description</div>
+
+        <div class="customcontent" >
+            <TaskModelContainer Tasks="story.Tasks" OnStatusUpdated="HandleStatusUpdated">
+                <TaskModelList ListStatus="TaskStatuses.Todo" AllowedStatuses="@(new TaskStatuses[] { TaskStatuses.Done, TaskStatuses.Todo})" />
+                <TaskModelList ListStatus="TaskStatuses.Done" AllowedStatuses="@(new TaskStatuses[] { TaskStatuses.Done, TaskStatuses.Todo})" />
+            </TaskModelContainer>
+        </div>
+    </div>
+}
+@code {
+    @using Newtonsoft.Json;
+    List<ToDo.Models.Story> Stories = new List<ToDo.Models.Story>();
+    List<ToDo.Models.Story> StoriesToPersist = new List<ToDo.Models.Story>();
+    string lastUpdatedStory = "";
+    int currentIndex;
+    public string TextForFilteration { get; set; } = string.Empty;
+    protected override void OnInitialized()
+    {
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        Stories = await GetJsonAsync<List<Story>>("http://localhost:51567/api/tasks");
+        StoriesToPersist = Stories;
+    }
+
+    protected void filterText()
+    {
+        Stories = StoriesToPersist.Where(x => x.Description.ToLower().Contains(TextForFilteration.ToLower())).ToList();
+        StateHasChanged();
+    }
+
+    void HandleStatusUpdated(Tasks updatedJob)
+    {
+        lastUpdatedStory = updatedJob.Description;
+        StateHasChanged();
+    }
+    public async Task<T> GetJsonAsync<T>(string requestUri)
+    {
+        HttpClient httpClient = new HttpClient();
+        var httpContent = await httpClient.GetAsync(requestUri);
+        string jsonContent = httpContent.Content.ReadAsStringAsync().Result;
+        T obj = JsonConvert.DeserializeObject<T>(jsonContent);
+        httpContent.Dispose();
+        httpClient.Dispose();
+        return obj;
+    }
+    int GetIndex(Story item)
+    {
+        return Stories.FindIndex(a => a.Id == item.Id);
+    }
+    private void HandleDragEnter(Story story)
+    {
+
+    }
+    void ClickItem(Story story)
+    {
+        currentIndex = GetIndex(story);
+    }
+    private async Task HandleDrop(Story story)
+    {
+        if (story != null)
+        {
+            var index = GetIndex(story);
+            Console.WriteLine($"Drop index is {index}, move from {currentIndex}");
+            // get current item
+            var current = Stories[currentIndex];
+            // remove game from current index
+            Stories.RemoveAt(currentIndex);
+            Stories.Insert(index, current);
+
+            StateHasChanged();
+        }
+        else
+        {
+
+        }
+    }
+}

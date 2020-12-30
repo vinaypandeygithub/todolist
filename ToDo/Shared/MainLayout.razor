@@ -1,0 +1,25 @@
+﻿@inherits LayoutComponentBase
+
+<div class="sidebar">
+    <NavMenu />
+</div>
+
+<div class="main">
+   
+    <div class="px-4">
+        @Body
+    </div>
+</div> 
+
+@code {
+
+    List<ToDo.Models.Story> Stories = new List<ToDo.Models.Story>();
+    string lastUpdatedStory = "";
+    [Inject]
+    protected IJSRuntime jsRuntime { get; set; }
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+            jsRuntime.InvokeVoidAsync("accordionPage");
+    }
+}

@@ -1,0 +1,31 @@
+﻿<div class="story-container">
+    <CascadingValue Value="this">
+        @ChildContent
+    </CascadingValue>
+</div>
+
+@code {
+    @using ToDo.Models;
+    [Parameter] public List<Tasks> Tasks { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public EventCallback<Tasks> OnStatusUpdated { get; set; }
+    public Tasks Payload { get; set; }
+
+    public async Task UpdateTasksAsync(TaskStatuses newStatus)
+    {
+        if (Payload == null) return;
+        var task = Tasks.SingleOrDefault(x => x.Id == Payload.Id);
+
+        if (task != null)
+        {
+            task.Status = newStatus;
+            task.LastUpdated = DateTime.Now;
+            await OnStatusUpdated.InvokeAsync(Payload);
+        }
+    }
+
+    public async Task StatusChanged()
+    {
+        StateHasChanged();
+    }
+}
